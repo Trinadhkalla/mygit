@@ -1,0 +1,4 @@
+yum install httpd -y
+cd /var/www/html
+systemctl start html
+systemctl status html
