@@ -4,3 +4,8 @@ amazon-linux-extras install epel java-openjdk11 -y
 yum install git maven jenkins -y
 systemctl start jenkins
 systemctl status jenkins
+
+
+check :ps -aux
+top
+htop
