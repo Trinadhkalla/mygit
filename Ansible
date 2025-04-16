@@ -1,0 +1,119 @@
+ANSIBLE 
+
+DAY-01:
+
+ALL SERVERS:
+hostnamectl set-hostname
+sudo -i
+passwd root
+vim /etc/ssh/sshd_config
+38: PermitRootLogin yes  # uncomment
+63: PasswordAuthentication yes
+
+systemctl restart sshd
+systemctl status sshd
+
+ANSIBLE SERVER:
+
+amazon-linux-extras install ansible2 -y
+yum install python python-pip python-level -y
+vim /etc/ansible/hosts
+
+[dev]
+PRIVTE IP
+
+[test]
+PRIVTE IP
+9
+vim /etc/asnible/ansible.cfg (uncomment 14 & 22)
+Remove # from line number 14 & line 22
+=========================================================
+SHH CONNECTIONS: ANSIBLE SERVER
+
+ssh-keygen  --- > 4 ENTERS
+
+ssh-copy-id root@private.ip --- > yes --- > password
+ssh private.ip
+ctrl + d (logout)
+Note: If you do not log out and try to connect to the new server it won't connect
+
+Connect all the servers in this way
+
+cd .ssh --- > cat known_hosts
+
+===========================================================================================
+
+INVENTORY HOST PATTERN:
+
+ansible all --list-hosts    		 # shows all the servers
+ansible all[1] --list-hosts		 # shows the 2nd server of all 
+ansible dev --list-hosts          # shows the dev server only
+ansible test --list-hosts         # shows the test server only
+ansible test[1] --list-hosts      # shows the test 2nd server only
+ansible all[1:3] --list-hosts     # shows server 2 to server 4
+ansible all[-1] --list-hosts      # shows the last server
+ansible all[-3] --list-hosts      # shows the last 3rd server
+
+===============================================================
+IF YOU ARE WORKING WITH NON ROOT USER USE SUDO
+
+WORKING WITH ANSIBLE:
+
+1. ADHOC: SIMPLE LINUX COMMANDS USED FOR ONLY ONCE WORKS
+
+ansible all -a "ls"
+ansible: command line tool
+all  : servers 
+-a : arguments 
+ls : linux commands
+
+
+ansible all -a "touch file1"
+ansible all -a "yum install git -y"
+
+
+==============================================================================================================================================================
+MODULES: 
+work on key-value pairs.
+key-value pair is also called a Dictionary.
+Modules are reusable
+define -m for module
+
+ansible all -a "yum install git -y"
+
+ansible all -m yum -a "pkg=git state=present"
+ansible all -m yum -a "pkg=java-1.8.0-openjdk state=present"
+ansible all -m yum -a "name=httpd state=present"
+ansible all -m yum -a "name=httpd state=latest"
+
+
+
+PLAYBOOKS: 
+Consist of one or more than one module
+to do the work more efficiently
+to write the playbook we need to use YAML.
+YAML=YET ANOTHER MARKUP LANGUAGE
+It is serializable language & Human readable language.
+in Yaml the first line starts with --- & end with ...
+key-value pair 
+indentation is more important.
+yml=yaml
+
+
+PLAYBOOK-1:
+
+- hosts: all
+  tasks:
+    - name: installing git
+      yum: name=git state=present
+...
+
+ansible-playbook playbook1.yml
+
+- hosts: all
+  tasks:
+    - name: abc
+      yum: name=git* state=absent
+...
+
+======================================================================
